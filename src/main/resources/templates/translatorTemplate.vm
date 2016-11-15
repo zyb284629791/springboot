@@ -1,0 +1,34 @@
+package com.sccl.YbZ.springboot.model;
+
+import com.taobao.yugong.common.model.record.Record;
+import com.taobao.yugong.common.utils.Constant;
+import java.sql.Timestamp;
+import java.sql.Types;
+
+/**
+* ${tableName}表
+* Created by zyb on ${date}.
+*/
+
+public class ${className}DataTranslator  extends AbstractDataTranslator {
+
+    @Override
+    public boolean translator(Record record) {
+        //老库optlock字段新库中没有，删除
+        record.removeColumnByName("optlock",true);
+        #if(${isChangeTableName})
+            //修改表名
+            record.setTableName(${midTableName});
+        #end
+
+        //新增delete_flag字段
+        super.addColumn(record, "delete_flag", Types.NUMERIC, 0);
+        //新增create_time字段
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        //表中createTime字段为非null。此处设置为当前时间
+        super.addColumn(record, "create_time", Types.TIMESTAMP, timestamp);
+        //新增update_time字段
+        super.addColumn(record, "update_time", Types.TIMESTAMP, null);
+        return super.translator(record);
+    }
+}
