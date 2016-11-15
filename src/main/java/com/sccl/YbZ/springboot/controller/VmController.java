@@ -31,6 +31,6 @@ public class VmController {
         //将数据存放map里面，可以直接在velocity页面，使用key访问
         model.addAttribute("data",l);
         logger.info("model data ready");
-        return "hello";
+        return "views/hello";
     }
 }
