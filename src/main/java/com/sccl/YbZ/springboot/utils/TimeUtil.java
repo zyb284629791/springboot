@@ -11,28 +11,86 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class TimeUtil {
 
+	/**
+	 * yyyy
+	 */
 	public final static String FORMATOR_Y = "yyyy";
+	/**
+	 * MM
+	 */
 	public final static String FORMATOR_M = "MM";
+	/**
+	 * dd
+	 */
 	public final static String FORMATOR_D = "dd";
+	/**
+	 * HH
+	 */
 	public final static String FORMATOR_H = "HH";
+	/**
+	 * yyyyMM
+	 */
 	public final static String FORMATOR_YM = "yyyyMM";
+	/**
+	 * yyyyMMdd
+	 */
 	public final static String FORMATOR_YMD = "yyyyMMdd";
+	/**
+	 * yyyyMMddHH
+	 */
 	public final static String FORMATOR_YMDH = "yyyyMMddHH";
+	/**
+	 * yyyyMMddHHmm
+	 */
 	public final static String FORMATOR_YMDHM = "yyyyMMddHHmm";
+	/**
+	 * yyyyMMddHHmmss
+	 */
 	public final static String FORMATOR_YMDHMS = "yyyyMMddHHmmss";
-	public final static String WEB_FORMATOR_YMD = "yyyy-MM-dd";
-	public final static String WEB_FORMATOR_YMDH = "yyyy-MM-dd HH";
-	public final static String WEB_FORMATOR_YMDHM = "yyyy-MM-dd HH:mm";
-	public final static String WEB_FORMATOR_YMDHMS = "yyyy-MM-dd HH:mm:ss";
-	public final static String ZN_FORMATOR_YMD = "yyyy年MM月dd日";
-	public final static String ZN_FORMATOR_YMDH = "yyyy年MM月dd日 HH时";
-	public final static String ZN_FORMATOR_MDH = "MM月dd日HH时";
-	public final static String DOC_FORMATOR_YMD = "yyyy/MM/dd";
-	public final static String DOC_FORMATOR_YMDH = "yyyy/MM/dd HH";
-//	public final static String DOC_FORMATOR_YMDHM = "yyyy/MM/dd HH";
-	public final static String POINT_FORMATOR_YMD = "yyyy.MM.dd";
-	public final static String POINT_FORMATOR_YMDH = "yyyy.MM.dd HH";
-//	public final static String POINT_FORMATOR_YMDHM = "yyyy.MM.dd HH";
+	/**
+	 * yyyy-MM-dd
+	 */
+	public final static String FORMATOR_YMD_WEB = "yyyy-MM-dd";
+	/**
+	 * yyyy-MM-dd HH
+	 */
+	public final static String FORMATOR_YMDH_WEB = "yyyy-MM-dd HH";
+	/**
+	 * yyyy-MM-dd HH:mm
+	 */
+	public final static String FORMATOR_YMDHM_WEB = "yyyy-MM-dd HH:mm";
+	/**
+	 * yyyy-MM-dd HH:mm:ss
+	 */
+	public final static String FORMATOR_YMDHMS_WEB = "yyyy-MM-dd HH:mm:ss";
+	/**
+	 * yyyy年MM月dd日
+	 */
+	public final static String FORMATOR_YMD_ZN = "yyyy年MM月dd日";
+	/**
+	 * yyyy年MM月dd日 HH时
+	 */
+	public final static String FORMATOR_YMDH_ZN = "yyyy年MM月dd日 HH时";
+	/**
+	 * MM月dd日HH时
+	 */
+	public final static String FORMATOR_MDH_ZN = "MM月dd日HH时";
+	/**
+	 * yyyy/MM/dd
+	 */
+	public final static String FORMATOR_YMD_DOC = "yyyy/MM/dd";
+	/**
+	 * yyyy/MM/dd HH
+	 */
+	public final static String FORMATOR_YMDH_DOC = "yyyy/MM/dd HH";
+	/**
+	 * yyyy.MM.dd
+	 */
+	public final static String FORMATOR_YMD_POINT = "yyyy.MM.dd";
+	/**
+	 * yyyy.MM.dd HH
+	 */
+	public final static String FORMATOR_YMDH_POINT = "yyyy.MM.dd HH";
 
 	/**
 	 * 根据条件获取当前时间

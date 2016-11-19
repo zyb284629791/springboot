@@ -13,7 +13,7 @@ import java.io.*;
  */
 public class TranslatorBuliderUtil {
 
-    private static final String TEMPLATE_VM_PATH = "templates/translatorTemplate.vm";
+    private static final String TEMPLATE_VM_PATH = "templates/codeBulider/model/translatorTemplate.vm";
     private static final String PACKAGE_PATH = "src/main/java/com/sccl/YbZ/springboot/translator/";
     private static final String SUFFIX = "DataTranslator";
 
@@ -21,9 +21,9 @@ public class TranslatorBuliderUtil {
         TranslatorBuliderUtil translatorBuliderUtil = new TranslatorBuliderUtil();
         try {
             String code = translatorBuliderUtil.createCode(TEMPLATE_VM_PATH);
-            System.out.println(code);
-//            translatorBuliderUtil.createFile();
-//            System.out.println("done");
+//            System.out.println(code);
+            translatorBuliderUtil.createFile();
+            System.out.println("done");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class TranslatorBuliderUtil {
      * @return
      */
     public static String getDate() {
-        return TimeUtil.currentTime(TimeUtil.DOC_FORMATOR_YMD);
+        return TimeUtil.currentTime(TimeUtil.FORMATOR_YMD_DOC);
     }
 
     public static String getTableName() {

@@ -56,6 +56,12 @@
             <version>10.2.0.3.0</version>
         </dependency>
 
+        <!--配置jdbctemplate-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
         <!--配置mybatis-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
