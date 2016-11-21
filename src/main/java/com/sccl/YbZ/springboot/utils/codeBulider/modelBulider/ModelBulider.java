@@ -32,7 +32,7 @@ public class ModelBulider {
     /**
      * modelVM路径
      */
-    private java.lang.String modelVMPath = "templates/codeBulider/model/ModelTemplate.vm";
+    private java.lang.String modelVMPath = "templates/codeBulider/model/ModelTemplateWithJPA.vm";
 
     private JdbcTemplate jdbcTemplate = new JdbcTemplate(DBUtil.getDataSource());
 
@@ -101,7 +101,7 @@ public class ModelBulider {
                 String columnName = pkrs.getString("COLUMN_NAME");//列名
                 //由于getprimarykeys得到的主键不包含列类型，描述等信息，故此处仅获取列名，通过getcolumns得到的信息重新封装
                 ColumnInfo columnInfo = new ColumnInfo();
-                columnInfos.put(columnName,columnInfo);
+                primaryKeys.put(columnName,columnInfo);
             }
             while (colrs.next()) {
                 String columnName = colrs.getString("COLUMN_NAME");//列名
@@ -163,6 +163,8 @@ public class ModelBulider {
             case Types.BOOLEAN:
                 columnType = "java.lang.Boolean";
                 break;
+            case Types.BLOB:
+                throw new RuntimeException("暂不支持blob类型...");
         }
         return columnType;
     }

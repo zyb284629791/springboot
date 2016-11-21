@@ -1,0 +1,55 @@
+package com.sccl.YbZ.springboot.model.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+
+/**
+* ${tableInfo.tableName}表对应实体
+* Created by ${author} on ${date}.
+*/
+@Entity
+@Table(name="${tableInfo.tableName}")
+public class ${tableInfo.className}{
+
+    //public String tableName = "${tableInfo.tableName}";
+
+#foreach($pk in $tableInfo.primaryKeys.entrySet())
+    private $pk.value.fieldType ${pk.value.fieldName};
+#end
+
+#foreach( $col in $tableInfo.columnInfos.entrySet() )
+    private $col.value.fieldType $col.value.fieldName;
+#end
+
+#foreach( $pk in $tableInfo.primaryKeys.entrySet() )
+
+    @Id
+    @Column(name="${pk.value.columnName}",unique=true,nullable=false)
+    public $pk.value.fieldType get${pk.value.PascalCaseFieldName}(){
+        return ${pk.value.fieldName};
+    }
+
+
+    public void set${pk.value.PascalCaseFieldName}($pk.value.fieldType $pk.value.fieldName){
+        this.$pk.value.fieldName = $pk.value.fieldName;
+    }
+
+#end
+
+#foreach($col in $tableInfo.columnInfos.entrySet())
+
+    @Column(name="${col.value.columnName}")
+    public $col.value.fieldType get${col.value.PascalCaseFieldName}(){
+        return ${col.value.fieldName};
+    }
+
+
+    public void set${col.value.PascalCaseFieldName}($col.value.fieldType $col.value.fieldName){
+        this.$col.value.fieldName = $col.value.fieldName;
+    }
+
+#end
+
+}
