@@ -11,7 +11,7 @@ import javax.persistence.Column;
 */
 @Entity
 @Table(name="${tableInfo.tableName}")
-public class ${tableInfo.className}{
+public class ${tableInfo.className} implements java.io.Serializable {
 
     //public String tableName = "${tableInfo.tableName}";
 

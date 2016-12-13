@@ -1,16 +1,17 @@
 package com.sccl.YbZ.springboot.utils.codeBulider.modelBulider;
 
+import com.sccl.YbZ.springboot.common.CodeBuliderException;
 import com.sccl.YbZ.springboot.common.Constant;
 import com.sccl.YbZ.springboot.model.codeBulider.ColumnInfo;
 import com.sccl.YbZ.springboot.model.codeBulider.TableInfo;
 import com.sccl.YbZ.springboot.utils.SpellUtil;
-import com.sccl.YbZ.springboot.utils.TimeUtil;
+import com.sccl.YbZ.springboot.utils.codeBulider.AutoCodeUtil;
+import com.sccl.YbZ.springboot.utils.codeBulider.CommonCodeBulider;
 import com.sccl.YbZ.springboot.utils.codeBulider.DBUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.*;
@@ -27,34 +28,21 @@ import java.util.Map;
  * 读取modelVM 生成代码
  * Created by zyb on 2016/11/16.
  */
-public class ModelBulider {
+public class ModelBulider implements CommonCodeBulider{
 
     /**
      * modelVM路径
      */
-    private java.lang.String modelVMPath = "templates/codeBulider/model/ModelTemplateWithJPA.vm";
-
+    private java.lang.String modelVMPath = "templates/codeBulider/model/modelTemplateWithJPA.vm";
+    /**
+     *
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    /**
+     *
+     */
     private JdbcTemplate jdbcTemplate = new JdbcTemplate(DBUtil.getDataSource());
 
-
-    private void createFile(String packagePath ,String tableName) throws Exception {
-        FileWriter fw = null;
-        String fileName = packagePath.endsWith(File.separator) ? packagePath + SpellUtil.toPascalCase(tableName) +
-                Constant.suffix : packagePath + File.separator + SpellUtil.toPascalCase(tableName) + Constant.suffix;
-        File file = new File(fileName);
-        String code = createCode(tableName);
-        try {
-            fw = new FileWriter(file);
-            fw.write(code);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if (fw != null) {
-                fw.close();
-            }
-        }
-    }
 
     /**
      * 根据模板生成代码
@@ -63,23 +51,24 @@ public class ModelBulider {
      * @return
      * @throws Exception
      */
+    @Override
     public String createCode(String tableName) throws Exception {
-        VelocityEngine velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty("input.encoding", "UTF-8");
-        velocityEngine.setProperty("output.encoding", "UTF-8");
-        velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-        velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        velocityEngine.init();
-        Template template = velocityEngine.getTemplate(modelVMPath);
-        VelocityContext velocityContext = new VelocityContext();
+        Template template = AutoCodeUtil.getTemplate(modelVMPath);
+        VelocityContext velocityContext = AutoCodeUtil.getVelocityContext();
         TableInfo tableInfo = getTableInfoByTableName(tableName);
         velocityContext.put("tableInfo", tableInfo);
         velocityContext.put("className", tableInfo.getClassName());
-        velocityContext.put("date", getDate());
-        velocityContext.put("author", getAuthor());
         StringWriter stringWriter = new StringWriter();
         template.merge(velocityContext, stringWriter);
         return stringWriter.toString();
+    }
+
+    @Override
+    public String getFileName(String tableName) {
+        String packagePath = "src/main/java/com/sccl/YbZ/springboot/model/entity/";
+        String fileName = packagePath.endsWith(File.separator) ? packagePath + SpellUtil.toPascalCase(tableName) +
+                Constant.suffix : packagePath + File.separator + SpellUtil.toPascalCase(tableName) + Constant.suffix;
+        return fileName;
     }
 
     /**
@@ -102,6 +91,13 @@ public class ModelBulider {
                 //由于getprimarykeys得到的主键不包含列类型，描述等信息，故此处仅获取列名，通过getcolumns得到的信息重新封装
                 ColumnInfo columnInfo = new ColumnInfo();
                 primaryKeys.put(columnName,columnInfo);
+            }
+            if (primaryKeys.size()> 1) {
+                logger.error("暂不支持联合主键");
+                throw new CodeBuliderException("暂不支持联合主键");
+            } else if (primaryKeys.size() == 0) {
+                logger.error("当前表" + tableName + "无主键,无法生成");
+                throw new CodeBuliderException("当前表" + tableName + "无主键,无法生成");
             }
             while (colrs.next()) {
                 String columnName = colrs.getString("COLUMN_NAME");//列名
@@ -136,54 +132,18 @@ public class ModelBulider {
         columnInfo.setColumnName(columnName);
         columnInfo.setColmunDescription(remarks);
         columnInfo.setColumnType(dataType);
-        columnInfo.setFieldType(transferColumnType(dataType));
+        columnInfo.setFieldType(AutoCodeUtil.transferColumnType(dataType));
         columnInfo.setFieldName(SpellUtil.toCamelCase(columnName));
         columnInfo.setPascalCaseFieldName(SpellUtil.toPascalCase(columnName));
         return columnInfo;
     }
 
-    /**
-     * 从DB类型转换成java类型
-     * @param dataType
-     * @return
-     */
-    private String transferColumnType(int dataType) {
-        String columnType = "java.lang.String";
-        switch (dataType){
-            case Types.DOUBLE:
-                columnType = "java.lang.Double";
-                break;
-            case Types.INTEGER:
-                columnType = "java.lang.Integer";
-                break;
-            case Types.DATE:
-            case Types.TIMESTAMP:
-                columnType = "java.util.Date";
-                break;
-            case Types.BOOLEAN:
-                columnType = "java.lang.Boolean";
-                break;
-            case Types.BLOB:
-                throw new RuntimeException("暂不支持blob类型...");
-        }
-        return columnType;
-    }
-
-    public String getDate() {
-        String date = TimeUtil.currentTime(TimeUtil.FORMATOR_YMD_POINT);
-        return date;
-    }
-
-    public String getAuthor() {
-        String author = System.getProperty("user.name");
-        return author;
-    }
 
     public static void main(String[] args) {
         ModelBulider mb = new ModelBulider();
         try {
-            String packagePath = "src/main/java/com/sccl/YbZ/springboot/model/entity/";
-            mb.createFile(packagePath,"user");
+
+            AutoCodeUtil.createFile("user",mb);
             System.out.println("done");
         } catch (Exception e) {
             e.printStackTrace();

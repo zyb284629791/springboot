@@ -1,0 +1,11 @@
+package com.sccl.YbZ.springboot.dao;
+
+import com.sccl.YbZ.springboot.common.BaseDao;
+import com.sccl.YbZ.springboot.model.entity.User;
+
+/**
+* ${daoName}
+* Created by ${author} on ${date}.
+*/
+public interface ${daoName} extends BaseDao<${entity},${PK}>{
+}

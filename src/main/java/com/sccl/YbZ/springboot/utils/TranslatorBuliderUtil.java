@@ -14,7 +14,7 @@ import java.io.*;
 public class TranslatorBuliderUtil {
 
     private static final String TEMPLATE_VM_PATH = "templates/codeBulider/model/translatorTemplate.vm";
-    private static final String PACKAGE_PATH = "src/main/java/com/sccl/YbZ/springboot/translator/";
+    private static final String PACKAGE_PATH = "E:\\IdeaWorkSpace\\PowerResEx\\Code\\Trunk\\yugongWithoutMV\\src\\test\\java\\com\\taobao\\yugong\\translator\\";
     private static final String SUFFIX = "DataTranslator";
 
     public static void main(String[] args) {
@@ -93,7 +93,7 @@ public class TranslatorBuliderUtil {
     }
 
     public static String getTableName() {
-        return "t_a_user";
+        return "T_TRANS_CIRCUIT";
     }
 
     public static boolean getIsChangeTableName() {
@@ -101,7 +101,7 @@ public class TranslatorBuliderUtil {
     }
 
     public static String getMidTableName() {
-        return "";
+        return "t_trans_segment";
     }
 
     public static String getClassName() {
