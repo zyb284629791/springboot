@@ -1,7 +1,7 @@
 package com.sccl.YbZ.springboot.controller;
 
-import com.sccl.YbZ.springboot.model.entity.User;
-import com.sccl.YbZ.springboot.service.UserService;
+import com.sccl.YbZ.springboot.biz.user.model.User;
+import com.sccl.YbZ.springboot.biz.user.service.UserService;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

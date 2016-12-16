@@ -1,6 +1,7 @@
 package com.sccl.YbZ.springboot.controller;
 
 import com.google.common.collect.Lists;
+import com.sccl.YbZ.springboot.model.codeBulider.TableInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -32,5 +33,18 @@ public class VmController {
         model.addAttribute("data",l);
         logger.info("model data ready");
         return "views/hello";
+    }
+
+    @RequestMapping("/index")
+    public String index(Model model) {
+        List<TableInfo> list = Lists.newArrayList();
+        TableInfo tableInfo = new TableInfo();
+        tableInfo.setTableName("user");
+        TableInfo tableInfo1 = new TableInfo();
+        tableInfo1.setTableName("test");
+        list.add(tableInfo);
+        list.add(tableInfo1);
+        model.addAttribute("lists", list);
+        return "views/index";
     }
 }

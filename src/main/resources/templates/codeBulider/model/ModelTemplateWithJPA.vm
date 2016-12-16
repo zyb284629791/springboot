@@ -1,4 +1,4 @@
-package com.sccl.YbZ.springboot.model.entity;
+package com.sccl.YbZ.springboot.biz.${tableInfo.tableName}.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +13,6 @@ import javax.persistence.Column;
 @Table(name="${tableInfo.tableName}")
 public class ${tableInfo.className} implements java.io.Serializable {
 
-    //public String tableName = "${tableInfo.tableName}";
 
 #foreach($pk in $tableInfo.primaryKeys.entrySet())
     private $pk.value.fieldType ${pk.value.fieldName};
