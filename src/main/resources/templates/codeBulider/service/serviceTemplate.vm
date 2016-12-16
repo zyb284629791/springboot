@@ -1,8 +1,8 @@
-package com.sccl.YbZ.springboot.service;
+package com.sccl.YbZ.springboot.biz.${tableName}.service;
 
 import com.sccl.YbZ.springboot.common.EntityManager;
-import com.sccl.YbZ.springboot.model.entity.${entity};
 import org.springframework.stereotype.Service;
+import com.sccl.YbZ.springboot.biz.${tableName}.model.${entity};
 
 /**
 * ${serviceName}

@@ -2,11 +2,12 @@ package com.sccl.YbZ.springboot.utils.codeBulider.controllerBulider;
 
 import com.sccl.YbZ.springboot.common.Constant;
 import com.sccl.YbZ.springboot.utils.SpellUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.AutoCodeUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.CommonCodeBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CommonBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CreateCodeCallBack;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import java.io.File;
 import java.io.StringWriter;
 
 /**
@@ -14,7 +15,7 @@ import java.io.StringWriter;
  * 读取restControllerVM 生成代码
  * Created by zyb on 2016/11/16.
  */
-public class RestControllerBulider implements CommonCodeBulider {
+public class RestControllerBulider implements CreateCodeCallBack {
 
     /**
      * restControllerVM路径
@@ -41,8 +42,9 @@ public class RestControllerBulider implements CommonCodeBulider {
      */
     @Override
     public String createCode(String tableName) throws Exception {
-        Template template = AutoCodeUtil.getTemplate(restControllerVMPath);
-        VelocityContext velocityContext = AutoCodeUtil.getVelocityContext();
+        Template template = CommonBulider.getTemplate(restControllerVMPath);
+        VelocityContext velocityContext = CommonBulider.getVelocityContext();
+        velocityContext.put("tableName", tableName);
         entityName = SpellUtil.toPascalCase(tableName);
         controllerName = entityName + "Controller";
         velocityContext.put("entity", entityName);
@@ -53,7 +55,7 @@ public class RestControllerBulider implements CommonCodeBulider {
         velocityContext.put("serviceAnnotation", serviceAnnotation);
         velocityContext.put("serviceName", serviceName);
         velocityContext.put("annotationName", annotationName);
-        String PK = AutoCodeUtil.getPKType(tableName);
+        String PK = CommonBulider.getPKType(tableName);
         velocityContext.put("PK", PK);
         StringWriter stringWriter = new StringWriter();
         template.merge(velocityContext, stringWriter);
@@ -61,19 +63,9 @@ public class RestControllerBulider implements CommonCodeBulider {
     }
 
     @Override
-    public String getFileName(String tableName) {
-        String packagePath = "src/main/java/com/sccl/YbZ/springboot/controller/";
+    public String getFileName(String tableName,String packagePath) {
         String filaName = packagePath + controllerName + Constant.suffix;
         return filaName;
     }
 
-    public static void main(String[] args) {
-        try {
-            RestControllerBulider rcb = new RestControllerBulider();
-            AutoCodeUtil.createFile("user",rcb);
-            System.out.println("done");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

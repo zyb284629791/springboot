@@ -93,15 +93,15 @@ public class TranslatorBuliderUtil {
     }
 
     public static String getTableName() {
-        return "T_TRANS_CIRCUIT";
+        return "t_trans_vcconnect";
     }
 
     public static boolean getIsChangeTableName() {
-        return false;
+        return true;
     }
 
     public static String getMidTableName() {
-        return "t_trans_segment";
+        return "t_trans_circuitroute";
     }
 
     public static String getClassName() {

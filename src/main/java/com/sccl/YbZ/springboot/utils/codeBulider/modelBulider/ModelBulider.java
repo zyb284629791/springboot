@@ -5,8 +5,8 @@ import com.sccl.YbZ.springboot.common.Constant;
 import com.sccl.YbZ.springboot.model.codeBulider.ColumnInfo;
 import com.sccl.YbZ.springboot.model.codeBulider.TableInfo;
 import com.sccl.YbZ.springboot.utils.SpellUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.AutoCodeUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.CommonCodeBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CommonBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CreateCodeCallBack;
 import com.sccl.YbZ.springboot.utils.codeBulider.DBUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -18,7 +18,6 @@ import java.io.*;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ import java.util.Map;
  * 读取modelVM 生成代码
  * Created by zyb on 2016/11/16.
  */
-public class ModelBulider implements CommonCodeBulider{
+public class ModelBulider implements CreateCodeCallBack {
 
     /**
      * modelVM路径
@@ -53,8 +52,8 @@ public class ModelBulider implements CommonCodeBulider{
      */
     @Override
     public String createCode(String tableName) throws Exception {
-        Template template = AutoCodeUtil.getTemplate(modelVMPath);
-        VelocityContext velocityContext = AutoCodeUtil.getVelocityContext();
+        Template template = CommonBulider.getTemplate(modelVMPath);
+        VelocityContext velocityContext = CommonBulider.getVelocityContext();
         TableInfo tableInfo = getTableInfoByTableName(tableName);
         velocityContext.put("tableInfo", tableInfo);
         velocityContext.put("className", tableInfo.getClassName());
@@ -64,8 +63,7 @@ public class ModelBulider implements CommonCodeBulider{
     }
 
     @Override
-    public String getFileName(String tableName) {
-        String packagePath = "src/main/java/com/sccl/YbZ/springboot/model/entity/";
+    public String getFileName(String tableName,String packagePath) {
         String fileName = packagePath.endsWith(File.separator) ? packagePath + SpellUtil.toPascalCase(tableName) +
                 Constant.suffix : packagePath + File.separator + SpellUtil.toPascalCase(tableName) + Constant.suffix;
         return fileName;
@@ -132,21 +130,10 @@ public class ModelBulider implements CommonCodeBulider{
         columnInfo.setColumnName(columnName);
         columnInfo.setColmunDescription(remarks);
         columnInfo.setColumnType(dataType);
-        columnInfo.setFieldType(AutoCodeUtil.transferColumnType(dataType));
+        columnInfo.setFieldType(CommonBulider.transferColumnType(dataType));
         columnInfo.setFieldName(SpellUtil.toCamelCase(columnName));
         columnInfo.setPascalCaseFieldName(SpellUtil.toPascalCase(columnName));
         return columnInfo;
     }
 
-
-    public static void main(String[] args) {
-        ModelBulider mb = new ModelBulider();
-        try {
-
-            AutoCodeUtil.createFile("user",mb);
-            System.out.println("done");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

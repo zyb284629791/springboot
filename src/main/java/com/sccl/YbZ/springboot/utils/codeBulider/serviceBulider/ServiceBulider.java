@@ -2,8 +2,8 @@ package com.sccl.YbZ.springboot.utils.codeBulider.serviceBulider;
 
 import com.sccl.YbZ.springboot.common.Constant;
 import com.sccl.YbZ.springboot.utils.SpellUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.AutoCodeUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.CommonCodeBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CommonBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CreateCodeCallBack;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -14,7 +14,7 @@ import java.io.StringWriter;
  * 读取serviceVM 生成代码
  * Created by zyb on 2016/11/16.
  */
-public class ServiceBulider implements CommonCodeBulider {
+public class ServiceBulider implements CreateCodeCallBack {
 
     /**
      * serviceVM路径
@@ -41,15 +41,16 @@ public class ServiceBulider implements CommonCodeBulider {
      */
     @Override
     public String createCode(String tableName) throws Exception {
-        Template template = AutoCodeUtil.getTemplate(serviceVMPath);
-        VelocityContext velocityContext = AutoCodeUtil.getVelocityContext();
+        Template template = CommonBulider.getTemplate(serviceVMPath);
+        VelocityContext velocityContext = CommonBulider.getVelocityContext();
+        velocityContext.put("tableName", tableName);
         entityName = SpellUtil.toPascalCase(tableName);
         serviceName = entityName + "Service";
         velocityContext.put("entity", entityName);
         velocityContext.put("serviceName", serviceName);
         String annotationName = SpellUtil.toCamelCase(tableName) + "Service";
         velocityContext.put("annotationName", annotationName);
-        String PK = AutoCodeUtil.getPKType(tableName);
+        String PK = CommonBulider.getPKType(tableName);
         velocityContext.put("PK", PK);
         StringWriter stringWriter = new StringWriter();
         template.merge(velocityContext, stringWriter);
@@ -57,19 +58,9 @@ public class ServiceBulider implements CommonCodeBulider {
     }
 
     @Override
-    public String getFileName(String tableName) {
-        String packagePath = "src/main/java/com/sccl/YbZ/springboot/service/";
+    public String getFileName(String tableName,String packagePath) {
         String filaName = packagePath + serviceName + Constant.suffix;
         return filaName;
     }
 
-    public static void main(String[] args) {
-        try {
-            ServiceBulider sb = new ServiceBulider();
-            AutoCodeUtil.createFile("user",sb);
-            System.out.println("done");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

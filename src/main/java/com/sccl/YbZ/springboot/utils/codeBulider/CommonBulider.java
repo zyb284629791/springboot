@@ -1,10 +1,7 @@
 package com.sccl.YbZ.springboot.utils.codeBulider;
 
-import com.alibaba.druid.sql.visitor.functions.If;
 import com.google.common.collect.Lists;
 import com.sccl.YbZ.springboot.common.CodeBuliderException;
-import com.sccl.YbZ.springboot.common.Constant;
-import com.sccl.YbZ.springboot.utils.SpellUtil;
 import com.sccl.YbZ.springboot.utils.TimeUtil;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -25,11 +22,12 @@ import java.sql.Types;
 import java.util.List;
 
 /**
+ * 读取模板创建文件时通用代码
  * Created by zyb on 2016/12/13.
  */
-public class AutoCodeUtil {
+public class CommonBulider {
 
-    private static Logger logger = LoggerFactory.getLogger(AutoCodeUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonBulider.class);
 
     private static JdbcTemplate jdbcTemplate = new JdbcTemplate(DBUtil.getDataSource());
 
@@ -54,22 +52,27 @@ public class AutoCodeUtil {
      */
     public static VelocityContext getVelocityContext() {
         VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("date", AutoCodeUtil.getDate());
-        velocityContext.put("author",AutoCodeUtil.getAuthor());
+        velocityContext.put("date", CommonBulider.getDate());
+        velocityContext.put("author", CommonBulider.getAuthor());
         return velocityContext;
     }
 
     /**
      * 生成类文件
      * @param tableName
-     * @param ccb
+     * @param packagePath
+     * @param callBack
      * @throws Exception
      */
-    public static void createFile(String tableName, CommonCodeBulider ccb) throws Exception {
+    public static void createFile(String tableName,String packagePath, CreateCodeCallBack callBack) throws Exception {
         FileWriter fw = null;
-        String code = ccb.createCode(tableName);
-        String fileName = ccb.getFileName(tableName);
+        String code = callBack.createCode(tableName);
+        packagePath = packagePath.endsWith(File.separator) ? packagePath : packagePath + File.separator;
+        String fileName = callBack.getFileName(tableName,packagePath);
         File file = new File(fileName);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
         try {
             fw = new FileWriter(file);
             fw.write(code);

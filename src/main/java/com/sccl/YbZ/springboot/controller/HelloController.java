@@ -2,11 +2,13 @@ package com.sccl.YbZ.springboot.controller;
 
 import com.sccl.YbZ.springboot.model.entity.User;
 import com.sccl.YbZ.springboot.service.UserService;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,5 +69,21 @@ public class HelloController {
     @RequestMapping(value = "/save/",method = RequestMethod.POST)
     public void save(@RequestBody User user) {
         service.save(user);
+    }
+
+    @RequestMapping("/logs")
+    public JSONObject log(){
+        String log = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File("C:\\Users\\Zhang\\Desktop\\1.log")));
+            log = br.readLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject jsonObject = JSONObject.fromObject(log);
+        logger.info("size --- > " + jsonObject.getJSONArray("records").size());
+        return jsonObject;
     }
 }

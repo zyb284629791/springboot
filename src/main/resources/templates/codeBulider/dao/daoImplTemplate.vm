@@ -1,10 +1,10 @@
-package com.sccl.YbZ.springboot.dao.impl;
+package com.sccl.YbZ.springboot.biz.${tableName}.dao.impl;
 
 
 import com.sccl.YbZ.springboot.common.BaseDaoImpl;
-import com.sccl.YbZ.springboot.model.entity.${entity};
-import com.sccl.YbZ.springboot.dao.${daoName};
 import org.springframework.stereotype.Repository;
+import com.sccl.YbZ.springboot.biz.${tableName}.model.${entity};
+import com.sccl.YbZ.springboot.biz.${tableName}.dao.${daoName};
 
 /**
 * ${daoName}实现

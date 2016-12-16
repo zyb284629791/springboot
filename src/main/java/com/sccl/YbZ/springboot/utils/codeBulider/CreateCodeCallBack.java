@@ -3,7 +3,7 @@ package com.sccl.YbZ.springboot.utils.codeBulider;
 /**
  * Created by zyb on 2016/12/13.
  */
-public interface CommonCodeBulider {
+public interface CreateCodeCallBack {
 
     /**
      * 根据模板生成代码
@@ -16,7 +16,8 @@ public interface CommonCodeBulider {
     /**
      * 要生成文件的文件名
      * @param tableName
+     * @param packagePath
      * @return
      */
-    String getFileName(String tableName);
+    String getFileName(String tableName,String packagePath);
 }

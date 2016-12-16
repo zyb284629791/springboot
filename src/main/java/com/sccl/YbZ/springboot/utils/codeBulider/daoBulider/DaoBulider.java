@@ -2,9 +2,8 @@ package com.sccl.YbZ.springboot.utils.codeBulider.daoBulider;
 
 import com.sccl.YbZ.springboot.common.Constant;
 import com.sccl.YbZ.springboot.utils.SpellUtil;
-import com.sccl.YbZ.springboot.utils.TimeUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.AutoCodeUtil;
-import com.sccl.YbZ.springboot.utils.codeBulider.CommonCodeBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CommonBulider;
+import com.sccl.YbZ.springboot.utils.codeBulider.CreateCodeCallBack;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -15,7 +14,7 @@ import java.io.StringWriter;
  * 读取daoVM 生成代码
  * Created by zyb on 2016/11/16.
  */
-public class DaoBulider implements CommonCodeBulider {
+public class DaoBulider implements CreateCodeCallBack {
 
     /**
      * daoVM路径
@@ -42,13 +41,14 @@ public class DaoBulider implements CommonCodeBulider {
      */
     @Override
     public String createCode(String tableName) throws Exception {
-        Template template = AutoCodeUtil.getTemplate(daoVMPath);
-        VelocityContext velocityContext = AutoCodeUtil.getVelocityContext();
+        Template template = CommonBulider.getTemplate(daoVMPath);
+        VelocityContext velocityContext = CommonBulider.getVelocityContext();
+        velocityContext.put("tableName", tableName);
         entityName = SpellUtil.toPascalCase(tableName);
         daoName = entityName + "Dao";
         velocityContext.put("entity", entityName);
         velocityContext.put("daoName", daoName);
-        String PK = AutoCodeUtil.getPKType(tableName);
+        String PK = CommonBulider.getPKType(tableName);
         velocityContext.put("PK", PK);
         StringWriter stringWriter = new StringWriter();
         template.merge(velocityContext, stringWriter);
@@ -56,19 +56,9 @@ public class DaoBulider implements CommonCodeBulider {
     }
 
     @Override
-    public String getFileName(String tableName) {
-        String packagePath = "src/main/java/com/sccl/YbZ/springboot/dao/";
+    public String getFileName(String tableName,String packagePath) {
         String filaName = packagePath + daoName + Constant.suffix;
         return filaName;
     }
 
-    public static void main(String[] args) {
-        try {
-            DaoBulider db = new DaoBulider();
-            AutoCodeUtil.createFile("user",db);
-            System.out.println("done");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
